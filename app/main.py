@@ -7,6 +7,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy import text
 
 from app.config import settings
 from app.database import engine, Base
@@ -28,7 +29,7 @@ async def lifespan(app: FastAPI):
     # Проверка подключения к БД
     try:
         async with engine.connect() as conn:
-            await conn.execute("SELECT 1")
+            await conn.execute(text("SELECT 1"))
         logger.info("✅ Database connection successful")
     except Exception as e:
         logger.error("❌ Database connection failed: %s", e)
